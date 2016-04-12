@@ -8,7 +8,6 @@
 namespace wbraganca\dynamicform;
 
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\CssSelector\CssSelector;
 use yii\helpers\Json;
 use yii\helpers\Html;
 use yii\base\InvalidConfigException;
@@ -184,32 +183,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
         $this->_options['template'] = trim($document->saveHTML());
 
-        if (isset($this->_options['min']) && $this->_options['min'] === 0 && $this->model->isNewRecord) {
-            $content = $this->removeItems($content);
-        }
-
         $this->registerAssets();
         echo Html::tag('div', $content, ['class' => $this->widgetContainer, 'data-dynamicform' => $this->_hashVar]);
-    }
-
-    private function removeItems($content)
-    {
-        $document = new \DOMDocument('1.0', \Yii::$app->charset);
-        $crawler = new Crawler();
-        $crawler->addHTMLContent($content, \Yii::$app->charset);
-        $root = $document->appendChild($document->createElement('_root'));
-        $crawler->rewind();
-        $root->appendChild($document->importNode($crawler->current(), true));
-        $domxpath = new \DOMXPath($document);
-        $crawlerInverse = $domxpath->query(CssSelector::toXPath($this->widgetItem));
-
-        foreach ($crawlerInverse as $elementToRemove) {
-            $parent = $elementToRemove->parentNode;
-            $parent->removeChild($elementToRemove);
-        }
-
-        $crawler->clear();
-        $crawler->add($document);
-        return $crawler->filter('body')->eq(0)->html();
     }
 }
