@@ -17,7 +17,8 @@
 	],
 	"require": {
 		"yiisoft/yii2": "*",
-		"symfony/dom-crawler": "*"
+		"symfony/dom-crawler": "*",
+		"symfony/css-selector": "*"
 	},
 	"autoload": {
 		"psr-4": { "wbraganca\\dynamicform\\": "" }
